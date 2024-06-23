@@ -1,15 +1,8 @@
 import { onMount, type Component, createEffect, onCleanup } from 'solid-js';
-import { ButtonWithKey } from './components';
-import { formatTime } from './utils';
-import { useStopwatch } from './hooks';
-
-/**
- * Key codes for stopwatch ops
- */
-const KEYS = {
-  START_OR_PAUSE: ' ',
-  RESET: 'r',
-} as const;
+import { ButtonWithKey } from '~/components';
+import { formatTime } from '~/utils';
+import { useStopwatch } from '~/hooks';
+import { KEYS } from '~/consts';
 
 export const App: Component = () => {
   const { time, isRunning, start, pause, reset, cancelAnimation } =
