@@ -5,7 +5,7 @@ const project = resolve(__dirname, 'tsconfig.json');
 module.exports = {
   root: true,
   extends: [
-    require.resolve('@vercel/style-guide/eslint/node'),
+    require.resolve('@vercel/style-guide/eslint/browser'),
     require.resolve('@vercel/style-guide/eslint/typescript'),
   ],
   parserOptions: {
@@ -19,5 +19,5 @@ module.exports = {
     },
   },
   // only scan files in src directory
-  ignorePatterns: ['*.config.ts'],
+  ignorePatterns: ['*.config.ts', '.eslintrc.js', '*.config.js'],
 };
