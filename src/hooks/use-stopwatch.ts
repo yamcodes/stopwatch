@@ -1,12 +1,21 @@
-import { createSignal } from 'solid-js';
+import { type Accessor, createSignal } from 'solid-js';
 
-export const useStopwatch = () => {
+export interface UseStopwatchReturn {
+  time: Accessor<{ elapsed: number; start: number; paused: number }>;
+  isRunning: Accessor<boolean>;
+  start: () => void;
+  pause: () => void;
+  reset: () => void;
+  cancelAnimation: () => void;
+}
+
+export const useStopwatch = (): UseStopwatchReturn => {
   const [time, setAllTime] = createSignal({
     elapsed: 0,
     start: 0,
     paused: 0,
   });
-  const setTime = (newTime: Partial<typeof time>) => {
+  const setTime = (newTime: Partial<typeof time>): void => {
     setAllTime({
       ...time(),
       ...newTime,
@@ -16,7 +25,7 @@ export const useStopwatch = () => {
 
   let animationFrameId: number;
 
-  const start = () => {
+  const start = (): void => {
     setTime({
       start: performance.now() - time().paused,
     });
@@ -24,7 +33,7 @@ export const useStopwatch = () => {
     updateElapsedTime();
   };
 
-  const pause = () => {
+  const pause = (): void => {
     setIsRunning(false);
     setTime({
       paused: performance.now() - time().start,
@@ -33,7 +42,7 @@ export const useStopwatch = () => {
     cancelAnimationFrame(animationFrameId);
   };
 
-  const reset = () => {
+  const reset = (): void => {
     setTime({
       start: 0,
       paused: 0,
@@ -43,7 +52,7 @@ export const useStopwatch = () => {
     cancelAnimationFrame(animationFrameId);
   };
 
-  const updateElapsedTime = () => {
+  const updateElapsedTime = (): void => {
     if (isRunning()) {
       setTime({
         elapsed: performance.now() - time().start,
@@ -52,7 +61,7 @@ export const useStopwatch = () => {
     }
   };
 
-  const cancelAnimation = () => {
+  const cancelAnimation = (): void => {
     cancelAnimationFrame(animationFrameId);
   };
 

@@ -1,5 +1,6 @@
 import { twJoin } from 'tailwind-merge';
-import { mergeProps, type ParentProps } from 'solid-js';
+import { type JSX, mergeProps, type ParentProps } from 'solid-js';
+
 export const ButtonColor = {
   Blue: 'Blue',
   Green: 'Green',
@@ -27,12 +28,12 @@ export type ButtonWithKeyProps = ParentProps<{
 
 /**
  * @see {@link ButtonColor}
- * @param color The color of the button
+ * @param color - The color of the button
  * @returns The class name to apply to the button
  */
 const colorToButtonClass = (
   color: (typeof ButtonColor)[keyof typeof ButtonColor],
-) => {
+): string => {
   switch (color) {
     case ButtonColor.Blue:
       return 'bg-blue-600 hover:bg-blue-500';
@@ -47,7 +48,7 @@ const colorToButtonClass = (
  * @see {@link ButtonWithKeyProps}
  * @returns A button with a key and a color
  */
-export const ButtonWithKey = (_props: ButtonWithKeyProps) => {
+export const ButtonWithKey = (_props: ButtonWithKeyProps): JSX.Element => {
   const props = mergeProps({ color: ButtonColor.Green }, _props);
   return (
     <div class="flex flex-col items-center gap-1">

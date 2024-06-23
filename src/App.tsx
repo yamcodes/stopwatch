@@ -8,15 +8,19 @@ export const App: Component = () => {
   const { time, isRunning, start, pause, reset, cancelAnimation } =
     useStopwatch();
 
-  let timeRef: HTMLParagraphElement;
+  let timeRef: HTMLParagraphElement | null = null;
 
-  const handleResize = () => {
-    if (!timeRef) return;
-    const parentWidth = timeRef.parentElement?.clientWidth || 0;
-    timeRef.style.fontSize = `${parentWidth * 0.228}px`;
+  const setTimeRef = (ref: HTMLParagraphElement): void => {
+    timeRef = ref;
   };
 
-  const handleKeyDown = (event: KeyboardEvent) => {
+  const handleResize = (): void => {
+    if (!timeRef) return;
+    const parentWidth = timeRef.parentElement?.clientWidth ?? 0;
+    timeRef.style.fontSize = `${(parentWidth * 0.228).toString()}px`;
+  };
+
+  const handleKeyDown = (event: KeyboardEvent): void => {
     if (event.key in KEYS) event.preventDefault();
     if (event.key === KEYS.START_OR_PAUSE) isRunning() ? pause() : start();
     if (event.key === KEYS.RESET) reset();
@@ -29,7 +33,7 @@ export const App: Component = () => {
   onMount(() => {
     window.addEventListener('resize', handleResize);
     window.addEventListener('keydown', handleKeyDown);
-    // Start the app with the correct text size for the initial screen size
+    // Force an inital resize
     handleResize();
   });
 
@@ -43,7 +47,7 @@ export const App: Component = () => {
   return (
     <div class="flex flex-col justify-center items-center h-screen">
       <p
-        ref={timeRef}
+        ref={setTimeRef}
         class="w-full font-bold text-left py-2 whitespace-nowrap transition-all duration-100"
       >
         {formatTime(time().elapsed, { displayMs: true })}
@@ -51,7 +55,9 @@ export const App: Component = () => {
       <div class="flex items-center gap-2">
         <ButtonWithKey
           key="Space"
-          onClick={() => (isRunning() ? pause() : start())}
+          onClick={() => {
+            isRunning() ? pause() : start();
+          }}
         >
           {isRunning() ? 'Pause' : 'Start'}
         </ButtonWithKey>

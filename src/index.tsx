@@ -11,4 +11,5 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
   );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- we create the root element in the index.html
 render(() => <App />, root!);
