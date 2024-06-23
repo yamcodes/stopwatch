@@ -1,5 +1,5 @@
 import { twJoin } from 'tailwind-merge';
-import { JSX, mergeProps, type ParentProps } from 'solid-js';
+import { mergeProps, type ParentProps } from 'solid-js';
 export const ButtonColor = {
   Blue: 'Blue',
   Green: 'Green',

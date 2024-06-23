@@ -1,10 +1,4 @@
-import {
-  createSignal,
-  onMount,
-  type Component,
-  createEffect,
-  onCleanup,
-} from 'solid-js';
+import { onMount, type Component, createEffect, onCleanup } from 'solid-js';
 import { ButtonWithKey } from './components';
 import { formatTime } from './utils';
 import { useStopwatch } from './hooks';
