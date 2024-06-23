@@ -26,14 +26,10 @@ export type ButtonWithKeyProps = ParentProps<{
 }>;
 
 /**
- * 
- * @param param0 <button
-            class={`text-white font-bold py-2 px-4 rounded bg-blue-500 hover:bg-blue-700`}
-            onClick={handleStartOrPauseClick}
-          >
- * @returns 
+ * @see {@link ButtonColor}
+ * @param color The color of the button
+ * @returns The class name to apply to the button
  */
-
 const colorToButtonClass = (
   color: (typeof ButtonColor)[keyof typeof ButtonColor],
 ) => {

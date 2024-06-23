@@ -6,63 +6,22 @@ import {
   onCleanup,
 } from 'solid-js';
 import { ButtonWithKey } from './components';
+import { formatTime } from './utils';
+import { useStopwatch } from './hooks';
 
+/**
+ * Key codes for stopwatch ops
+ */
 const KEYS = {
   START_OR_PAUSE: ' ',
   RESET: 'r',
 } as const;
 
 const App: Component = () => {
-  const [time, setAllTime] = createSignal({
-    elapsed: 0,
-    start: 0,
-    paused: 0,
-  });
-  const setTime = (newTime: Partial<typeof time>) => {
-    setAllTime({
-      ...time(),
-      ...newTime,
-    });
-  };
-  const [isRunning, setIsRunning] = createSignal(false);
+  const { time, isRunning, start, pause, reset, cancelAnimation } =
+    useStopwatch();
 
-  let animationFrameId: number;
   let timeRef: HTMLParagraphElement;
-
-  const start = () => {
-    setTime({
-      start: performance.now() - time().paused,
-    });
-    setIsRunning(true);
-    updateElapsedTime();
-  };
-
-  const pause = () => {
-    setIsRunning(false);
-    setTime({
-      paused: performance.now() - time().start,
-    });
-    cancelAnimationFrame(animationFrameId);
-  };
-
-  const reset = () => {
-    setTime({
-      start: 0,
-      paused: 0,
-      elapsed: 0,
-    });
-    setIsRunning(false);
-    cancelAnimationFrame(animationFrameId);
-  };
-
-  const updateElapsedTime = () => {
-    if (isRunning()) {
-      setTime({
-        elapsed: performance.now() - time().start,
-      });
-      animationFrameId = requestAnimationFrame(updateElapsedTime);
-    }
-  };
 
   const handleResize = () => {
     if (!timeRef) return;
@@ -76,11 +35,6 @@ const App: Component = () => {
     if (event.key === KEYS.RESET) reset();
   };
 
-  const formatTime = (timeMs: number) => {
-    const displayHours = timeMs / 3600000 > 1;
-    return new Date(timeMs).toISOString().slice(displayHours ? 11 : 14, 22);
-  };
-
   createEffect(() => {
     document.title = formatTime(time().elapsed);
   });
@@ -88,14 +42,15 @@ const App: Component = () => {
   onMount(() => {
     window.addEventListener('resize', handleResize);
     window.addEventListener('keydown', handleKeyDown);
-    // Resize on mount to fit the screen
+    // Start the app with the correct text size for the initial screen size
     handleResize();
   });
 
   onCleanup(() => {
     window.removeEventListener('resize', handleResize);
     window.removeEventListener('keydown', handleKeyDown);
-    cancelAnimationFrame(animationFrameId);
+    // Cancel the animation frame to prevent memory leaks
+    cancelAnimation();
   });
 
   return (
@@ -105,7 +60,7 @@ const App: Component = () => {
           ref={timeRef}
           class="w-full font-bold text-left py-2 whitespace-nowrap transition-all duration-100"
         >
-          {formatTime(time().elapsed)}
+          {formatTime(time().elapsed, { displayMs: true })}
         </p>
         <div class="flex items-center gap-2">
           <ButtonWithKey
