@@ -1,1 +1,1 @@
-export * from './ButtonWithKey';
+export * from './button-with-key';

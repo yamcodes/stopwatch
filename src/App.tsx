@@ -17,7 +17,7 @@ const KEYS = {
   RESET: 'r',
 } as const;
 
-const App: Component = () => {
+export const App: Component = () => {
   const { time, isRunning, start, pause, reset, cancelAnimation } =
     useStopwatch();
 
@@ -54,28 +54,24 @@ const App: Component = () => {
   });
 
   return (
-    <>
-      <div class="flex flex-col justify-center items-center h-screen">
-        <p
-          ref={timeRef}
-          class="w-full font-bold text-left py-2 whitespace-nowrap transition-all duration-100"
+    <div class="flex flex-col justify-center items-center h-screen">
+      <p
+        ref={timeRef}
+        class="w-full font-bold text-left py-2 whitespace-nowrap transition-all duration-100"
+      >
+        {formatTime(time().elapsed, { displayMs: true })}
+      </p>
+      <div class="flex items-center gap-2">
+        <ButtonWithKey
+          key="Space"
+          onClick={() => (isRunning() ? pause() : start())}
         >
-          {formatTime(time().elapsed, { displayMs: true })}
-        </p>
-        <div class="flex items-center gap-2">
-          <ButtonWithKey
-            key="Space"
-            onClick={() => (isRunning() ? pause() : start())}
-          >
-            {isRunning() ? 'Pause' : 'Start'}
-          </ButtonWithKey>
-          <ButtonWithKey key="R" onClick={reset} color="Red">
-            Reset
-          </ButtonWithKey>
-        </div>
+          {isRunning() ? 'Pause' : 'Start'}
+        </ButtonWithKey>
+        <ButtonWithKey key="R" onClick={reset} color="Red">
+          Reset
+        </ButtonWithKey>
       </div>
-    </>
+    </div>
   );
 };
-
-export default App;

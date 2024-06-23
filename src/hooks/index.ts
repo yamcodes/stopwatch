@@ -1,1 +1,1 @@
-export * from './useStopwatch';
+export * from './use-stopwatch';
