@@ -1,4 +1,5 @@
 import { createSignal, onMount, type Component, createEffect } from 'solid-js';
+import { ButtonWithKey } from './components';
 
 type StartOrPause = 'Start' | 'Pause';
 
@@ -91,18 +92,12 @@ const App: Component = () => {
           {formatTime(timeCs())}
         </p>
         <div class="flex items-center gap-2">
-          <button
-            class={`text-white font-bold py-2 px-4 rounded bg-blue-500 hover:bg-blue-700`}
-            onClick={handleStartOrPauseClick}
-          >
-            {startOrPause()}
-          </button>
-          <button
-            class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-            onClick={handleResetClick}
-          >
+          <ButtonWithKey key="Space" onClick={handleStartOrPauseClick}>
+            <span>{startOrPause()}</span>
+          </ButtonWithKey>
+          <ButtonWithKey key="R" onClick={handleResetClick} color="Red">
             Reset
-          </button>
+          </ButtonWithKey>
         </div>
       </div>
     </>
