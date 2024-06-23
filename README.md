@@ -60,7 +60,7 @@ The optimized and minified files will be generated in the `dist` folder.
 
 - Press the spacebar or click the "Start" button to start the stopwatch
 - Press the spacebar or click the "Pause" button to pause the stopwatch
-- Press "r" or click the "Reset" button to reset the stopwatch
+- Press "R" or click the "Reset" button to reset the stopwatch
 
 ## Keyboard Shortcuts
 
@@ -68,7 +68,7 @@ The optimized and minified files will be generated in the `dist` folder.
 const KEYS = {
   START_OR_PAUSE: ' ',
   RESET: 'r',
-};
+} as const;
 ```
 
 ## Deployment
