@@ -93,7 +93,7 @@ const App: Component = () => {
         </p>
         <div class="flex items-center gap-2">
           <ButtonWithKey key="Space" onClick={handleStartOrPauseClick}>
-            <span>{startOrPause()}</span>
+            {startOrPause()}
           </ButtonWithKey>
           <ButtonWithKey key="R" onClick={handleResetClick} color="Red">
             Reset
