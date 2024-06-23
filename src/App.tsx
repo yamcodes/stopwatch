@@ -1,33 +1,67 @@
-import { createSignal, onMount, type Component, createEffect } from 'solid-js';
+import {
+  createSignal,
+  onMount,
+  type Component,
+  createEffect,
+  onCleanup,
+} from 'solid-js';
 import { ButtonWithKey } from './components';
-
-type StartOrPause = 'Start' | 'Pause';
 
 const KEYS = {
   START_OR_PAUSE: ' ',
   RESET: 'r',
-};
+} as const;
 
 const App: Component = () => {
-  // Time (in centiseconds)
-  const [timeCs, setTimeCs] = createSignal(0);
-
-  const increment = () => setTimeCs(timeCs() + 1);
-  const reset = () => setTimeCs(0);
-
-  // Change the title bar on timeCs changes
-  createEffect(() => {
-    document.title = formatTimeTitle(timeCs());
+  const [time, setAllTime] = createSignal({
+    elapsed: 0,
+    start: 0,
+    paused: 0,
   });
+  const setTime = (newTime: Partial<typeof time>) => {
+    setAllTime({
+      ...time(),
+      ...newTime,
+    });
+  };
+  const [isRunning, setIsRunning] = createSignal(false);
 
-  const [startOrPause, setStartOrPause] = createSignal<StartOrPause>('Start');
-
+  let animationFrameId: number;
   let timeRef: HTMLParagraphElement;
 
-  const tick = async () => {
-    if (startOrPause() === 'Pause') increment();
-    await new Promise((resolve) => setTimeout(resolve, 10));
-    tick();
+  const start = () => {
+    setTime({
+      start: performance.now() - time().paused,
+    });
+    setIsRunning(true);
+    updateElapsedTime();
+  };
+
+  const pause = () => {
+    setIsRunning(false);
+    setTime({
+      paused: performance.now() - time().start,
+    });
+    cancelAnimationFrame(animationFrameId);
+  };
+
+  const reset = () => {
+    setTime({
+      start: 0,
+      paused: 0,
+      elapsed: 0,
+    });
+    setIsRunning(false);
+    cancelAnimationFrame(animationFrameId);
+  };
+
+  const updateElapsedTime = () => {
+    if (isRunning()) {
+      setTime({
+        elapsed: performance.now() - time().start,
+      });
+      animationFrameId = requestAnimationFrame(updateElapsedTime);
+    }
   };
 
   const handleResize = () => {
@@ -37,49 +71,31 @@ const App: Component = () => {
   };
 
   const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === KEYS.START_OR_PAUSE) {
-      // Prevent a double event in case the button is selected
-      event.preventDefault();
-      handleStartOrPauseClick();
-    }
-    if (event.key === KEYS.RESET) {
-      event.preventDefault();
-      handleResetClick();
-    }
+    if (event.key in KEYS) event.preventDefault();
+    if (event.key === KEYS.START_OR_PAUSE) isRunning() ? pause() : start();
+    if (event.key === KEYS.RESET) reset();
   };
 
-  /**
-   * Format time to (hh:)mm:ss.cc
-   * @param timeCs
-   */
-  const formatTime = (timeCs: number) => {
-    const displayHours = timeCs / 360000 > 1;
-    return new Date(timeCs * 10)
-      .toISOString()
-      .slice(displayHours ? 11 : 14, 22);
+  const formatTime = (timeMs: number) => {
+    const displayHours = timeMs / 3600000 > 1;
+    return new Date(timeMs).toISOString().slice(displayHours ? 11 : 14, 22);
   };
 
-  const formatTimeTitle = (timeCs: number) => {
-    const displayHours = timeCs / 360000 > 1;
-    return new Date(timeCs * 10)
-      .toISOString()
-      .slice(displayHours ? 11 : 14, 19);
-  };
-
-  const handleStartOrPauseClick = () => {
-    setStartOrPause(startOrPause() === 'Start' ? 'Pause' : 'Start');
-  };
-
-  const handleResetClick = () => {
-    reset();
-    setStartOrPause('Start');
-  };
+  createEffect(() => {
+    document.title = formatTime(time().elapsed);
+  });
 
   onMount(() => {
-    handleResize();
     window.addEventListener('resize', handleResize);
     window.addEventListener('keydown', handleKeyDown);
-    tick();
+    // Resize on mount to fit the screen
+    handleResize();
+  });
+
+  onCleanup(() => {
+    window.removeEventListener('resize', handleResize);
+    window.removeEventListener('keydown', handleKeyDown);
+    cancelAnimationFrame(animationFrameId);
   });
 
   return (
@@ -89,13 +105,16 @@ const App: Component = () => {
           ref={timeRef}
           class="w-full font-bold text-left py-2 whitespace-nowrap transition-all duration-100"
         >
-          {formatTime(timeCs())}
+          {formatTime(time().elapsed)}
         </p>
         <div class="flex items-center gap-2">
-          <ButtonWithKey key="Space" onClick={handleStartOrPauseClick}>
-            {startOrPause()}
+          <ButtonWithKey
+            key="Space"
+            onClick={() => (isRunning() ? pause() : start())}
+          >
+            {isRunning() ? 'Pause' : 'Start'}
           </ButtonWithKey>
-          <ButtonWithKey key="R" onClick={handleResetClick} color="Red">
+          <ButtonWithKey key="R" onClick={reset} color="Red">
             Reset
           </ButtonWithKey>
         </div>
