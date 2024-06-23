@@ -1,34 +1,84 @@
-## Usage
+# stopwatch
 
-Those templates dependencies are maintained via [pnpm](https://pnpm.io) via `pnpm up -Lri`.
+A simple stopwatch app built with SolidJS.
 
-This is the reason you see a `pnpm-lock.yaml`. That being said, any package manager will work. This file can be safely be removed once you clone a template.
+## Features
 
-```bash
-$ npm install # or pnpm install or yarn install
+- Start, pause, and reset the stopwatch
+- Keyboard shortcuts (space to start/pause, r to reset)
+- Lightweight and fast
+- Responsive design adapting to screen resizing
+
+## Development
+
+### Prerequisites
+
+- Node.js (v18 or later)
+- pnpm (v9 or later)
+
+### Installation
+
+1. Clone the repository:
+
+```
+git clone https://github.com/yamcodes/stopwatch
 ```
 
-### Learn more on the [Solid Website](https://solidjs.com) and come chat with us on our [Discord](https://discord.com/invite/solidjs)
+2. Change to the project directory:
 
-## Available Scripts
+```
+cd stopwatch
+```
 
-In the project directory, you can run:
+3. Install dependencies:
 
-### `npm run dev` or `npm start`
+```
+pnpm install
+```
 
-Runs the app in the development mode.<br>
+### Running the App
+
+To start the development server, run:
+
+```
+pnpm dev
+```
+
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.<br>
+### Building for Production
 
-### `npm run build`
+To build the app for production, run:
 
-Builds the app for production to the `dist` folder.<br>
-It correctly bundles Solid in production mode and optimizes the build for the best performance.
+```
+pnpm build
+```
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+The optimized and minified files will be generated in the `dist` folder.
+
+## Usage
+
+- Press the spacebar or click the "Start" button to start the stopwatch
+- Press the spacebar or click the "Pause" button to pause the stopwatch
+- Press "r" or click the "Reset" button to reset the stopwatch
+
+## Keyboard Shortcuts
+
+```ts
+const KEYS = {
+  START_OR_PAUSE: ' ',
+  RESET: 'r',
+};
+```
 
 ## Deployment
 
-You can deploy the `dist` folder to any static host provider (netlify, surge, now, etc.)
+You can deploy the `dist` folder to any static host provider (Netlify, Surge, Now, etc.)
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
