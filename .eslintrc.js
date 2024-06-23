@@ -19,5 +19,10 @@ module.exports = {
     },
   },
   // only scan files in src directory
-  ignorePatterns: ['*.config.ts', '.eslintrc.js', '*.config.js'],
+  ignorePatterns: [
+    '*.config.ts',
+    '.eslintrc.js',
+    '*.config.js',
+    '.prettierrc.js',
+  ],
 };

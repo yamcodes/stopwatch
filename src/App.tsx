@@ -45,10 +45,10 @@ export const App: Component = () => {
   });
 
   return (
-    <div class="flex flex-col justify-center items-center h-screen">
+    <div class="flex h-screen flex-col items-center justify-center">
       <p
         ref={setTimeRef}
-        class="w-full font-bold text-left py-2 whitespace-nowrap transition-all duration-100"
+        class="w-full whitespace-nowrap py-2 text-left font-bold transition-all duration-100"
       >
         {formatTime(time().elapsed, { displayMs: true })}
       </p>
