@@ -19,9 +19,10 @@ module.exports = {
     },
   },
   ignorePatterns: [
+    '*.config.*js',
     '*.config.ts',
-    '.eslintrc.js',
-    '*.config.js',
-    '.prettierrc.js',
+    '.eslintrc.*js',
+    '.prettierrc.*js',
+    'node_modules',
   ],
 };

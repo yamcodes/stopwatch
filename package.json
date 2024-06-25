@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "description": "",
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "build": "vite build",
     "dev": "vite",
@@ -14,6 +15,8 @@
     "start": "vite"
   },
   "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.14.1",
+    "@typescript-eslint/parser": "^7.14.1",
     "solid-js": "^1.8.11",
     "tailwind-merge": "^2.3.0"
   },
