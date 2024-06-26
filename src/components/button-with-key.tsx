@@ -54,14 +54,14 @@ export const ButtonWithKey = (_props: ButtonWithKeyProps): JSX.Element => {
     <div class="flex flex-col items-center gap-1">
       <button
         class={twJoin(
-          'font-outline-2 rounded-lg border-4 border-black border-opacity-15 px-4 py-1 text-xl font-bold text-white outline-none',
+          'rounded-lg border-4 border-black border-opacity-15 px-4 py-1 text-xl font-bold text-white outline-none font-outline-2',
           colorToButtonClass(props.color),
         )}
         onClick={props.onClick}
       >
         {props.children}
       </button>
-      <span class="font-outline-2 text-xs font-bold text-white opacity-70">
+      <span class="text-xs font-bold text-white font-outline-2">
         [{props.key}]
       </span>
     </div>

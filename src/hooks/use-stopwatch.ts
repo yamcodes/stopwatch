@@ -1,4 +1,6 @@
-import { type Accessor, createSignal } from 'solid-js';
+import { type Accessor, createSignal, onCleanup, onMount } from 'solid-js';
+import { formatTime } from '~/utils';
+import Worker from '~/workers/time-worker.ts?worker';
 
 export interface UseStopwatchReturn {
   time: Accessor<{ elapsed: number; start: number; paused: number }>;
@@ -6,7 +8,6 @@ export interface UseStopwatchReturn {
   start: () => void;
   pause: () => void;
   reset: () => void;
-  cancelAnimation: () => void;
 }
 
 export const useStopwatch = (): UseStopwatchReturn => {
@@ -23,7 +24,20 @@ export const useStopwatch = (): UseStopwatchReturn => {
   };
   const [isRunning, setIsRunning] = createSignal(false);
 
+  const worker = new Worker();
   let animationFrameId: number;
+
+  /**
+   * Update the time every time time-worker sends a tick message,
+   * to update the title even while the tab is inactive
+   */
+  worker.onmessage = () => {
+    if (!isRunning()) return;
+    setTime({
+      elapsed: performance.now() - time().start,
+    });
+    updateTitle();
+  };
 
   const start = (): void => {
     setTime({
@@ -38,7 +52,6 @@ export const useStopwatch = (): UseStopwatchReturn => {
     setTime({
       paused: performance.now() - time().start,
     });
-    // force the animation to update
     cancelAnimationFrame(animationFrameId);
   };
 
@@ -50,20 +63,29 @@ export const useStopwatch = (): UseStopwatchReturn => {
     });
     setIsRunning(false);
     cancelAnimationFrame(animationFrameId);
+    updateTitle();
   };
 
   const updateElapsedTime = (): void => {
-    if (isRunning()) {
-      setTime({
-        elapsed: performance.now() - time().start,
-      });
-      animationFrameId = requestAnimationFrame(updateElapsedTime);
-    }
+    if (!isRunning()) return;
+    setTime({
+      elapsed: performance.now() - time().start,
+    });
+    animationFrameId = requestAnimationFrame(updateElapsedTime);
   };
 
-  const cancelAnimation = (): void => {
-    cancelAnimationFrame(animationFrameId);
+  const updateTitle = (): void => {
+    document.title = formatTime(time().elapsed);
   };
+
+  onMount(() => {
+    updateTitle();
+  });
+
+  onCleanup(() => {
+    worker.terminate(); // Terminate worker on cleanup
+    cancelAnimationFrame(animationFrameId);
+  });
 
   return {
     time,
@@ -71,6 +93,5 @@ export const useStopwatch = (): UseStopwatchReturn => {
     start,
     pause,
     reset,
-    cancelAnimation,
   };
 };

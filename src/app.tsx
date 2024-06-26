@@ -1,12 +1,11 @@
-import { onMount, type Component, createEffect, onCleanup } from 'solid-js';
+import { onMount, type Component, onCleanup } from 'solid-js';
 import { ButtonWithKey } from '~/components';
 import { formatTime } from '~/utils';
 import { useStopwatch } from '~/hooks';
 import { KEYS } from '~/consts';
 
 export const App: Component = () => {
-  const { time, isRunning, start, pause, reset, cancelAnimation } =
-    useStopwatch();
+  const { time, isRunning, start, pause, reset } = useStopwatch();
 
   let timeRef: HTMLParagraphElement | null = null;
 
@@ -26,10 +25,6 @@ export const App: Component = () => {
     if (event.key === KEYS.RESET) reset();
   };
 
-  createEffect(() => {
-    document.title = formatTime(time().elapsed);
-  });
-
   onMount(() => {
     window.addEventListener('resize', handleResize);
     window.addEventListener('keydown', handleKeyDown);
@@ -40,15 +35,13 @@ export const App: Component = () => {
   onCleanup(() => {
     window.removeEventListener('resize', handleResize);
     window.removeEventListener('keydown', handleKeyDown);
-    // Cancel the animation frame to prevent memory leaks
-    cancelAnimation();
   });
 
   return (
     <div class="flex h-screen flex-col items-center justify-center">
       <p
         ref={setTimeRef}
-        class="w-full whitespace-nowrap py-2 text-left font-bold transition-all duration-100"
+        class="w-full whitespace-nowrap py-2 text-left font-bold text-white transition-all duration-100 font-outline-8"
       >
         {formatTime(time().elapsed, { displayMs: true })}
       </p>
