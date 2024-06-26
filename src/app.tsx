@@ -16,7 +16,7 @@ export const App: Component = () => {
   const handleResize = (): void => {
     if (!timeRef) return;
     const parentWidth = timeRef.parentElement?.clientWidth ?? 0;
-    timeRef.style.fontSize = `${(parentWidth * 0.228).toString()}px`;
+    timeRef.style.fontSize = `${(parentWidth * 0.245).toString()}px`;
   };
 
   const handleKeyDown = (event: KeyboardEvent): void => {
@@ -41,7 +41,7 @@ export const App: Component = () => {
     <div class="flex h-screen flex-col items-center justify-center">
       <p
         ref={setTimeRef}
-        class="w-full whitespace-nowrap py-2 text-left font-bold text-white transition-all duration-100 font-outline-8"
+        class="w-full whitespace-nowrap py-2 pl-2.5 text-left font-bold text-white transition-all duration-100 font-outline-8"
       >
         {formatTime(time().elapsed, { displayMs: true })}
       </p>

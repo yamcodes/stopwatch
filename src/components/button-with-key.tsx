@@ -54,7 +54,7 @@ export const ButtonWithKey = (_props: ButtonWithKeyProps): JSX.Element => {
     <div class="flex flex-col items-center gap-1">
       <button
         class={twJoin(
-          'rounded-lg border-4 border-black border-opacity-15 px-4 py-1 text-xl font-bold text-white outline-none font-outline-2',
+          'rounded-lg border-4 border-black border-opacity-15 px-4 py-1 text-xl font-bold text-white outline-none font-outline-3',
           colorToButtonClass(props.color),
         )}
         onClick={props.onClick}
