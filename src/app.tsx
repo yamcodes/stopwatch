@@ -20,7 +20,8 @@ export const App: Component = () => {
   };
 
   const handleKeyDown = (event: KeyboardEvent): void => {
-    if (event.key in KEYS) event.preventDefault();
+    if ((Object.values(KEYS) as string[]).includes(event.key))
+      event.preventDefault();
     if (event.key === KEYS.START_OR_PAUSE) isRunning() ? pause() : start();
     if (event.key === KEYS.RESET) reset();
   };
