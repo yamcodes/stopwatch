@@ -2,4 +2,4 @@
 
 setInterval(() => {
   postMessage('tick');
-}, 1000);
+}, 1000 / 60);
