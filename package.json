@@ -15,8 +15,8 @@
     "start": "vite"
   },
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^7.14.1",
-    "@typescript-eslint/parser": "^7.14.1",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
     "solid-js": "^1.8.11",
     "tailwind-merge": "^2.3.0"
   },
